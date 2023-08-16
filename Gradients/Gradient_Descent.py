@@ -3,25 +3,39 @@ import numpy as np
 from Common_func.common_main import function_2
 
 
-def numerical_gradients(f, x): # f는 함수, x는 넘파이 배열
-    # 즉 x는 넘파이 배열 x의 각 원소에 대해서 수치 미분을 구한다
+def numerical_gradients(f, x):
     h = 1e-4
-    # grad: x와 같은 크기의 0으로 채워진 배열
-    grad = np.zeros_like(x) # x와 형상이 같고 그 원사가 모두 0인 배열을 만든다
+    grad = np.zeros_like(x)
 
-    for idx in range(x.size):
-        tmp_val = x[idx]
+    # 1차원 배열을 위한 경우
+    if x.ndim == 1:
+        for idx in range(x.size):
+            tmp_val = x[idx]
+            x[idx] = tmp_val + h
+            fxh1 = f(x)
+            x[idx] = tmp_val - h
+            fxh2 = f(x)
+            grad[idx] = (fxh1 - fxh2) / (2 * h)
+            x[idx] = tmp_val
+        return grad
 
-        x[idx] = tmp_val + h
-        fxh1 = f(x)
+    # 2차원 배열을 위한 경우
+    elif x.ndim == 2:
+        for i in range(x.shape[0]):
+            for j in range(x.shape[1]):
+                tmp_val = x[i, j]
+                x[i, j] = tmp_val + h
+                fxh1 = f(x)
+                x[i, j] = tmp_val - h
+                fxh2 = f(x)
+                grad[i, j] = (fxh1 - fxh2) / (2 * h)
+                x[i, j] = tmp_val
+        return grad
 
-        x[idx] = tmp_val - h
-        fxh2 = f(x)
+    # 그 외의 경우
+    else:
+        raise ValueError("x should be 1 or 2 dimensional array.")
 
-        grad[idx] = (fxh1 - fxh2) / (2 * h)
-        x[idx] = tmp_val
-
-    return grad
 
 def gradient_descent(f, init_x, lr=0.01, step_num=100):
     x = init_x # init_x: 초기값

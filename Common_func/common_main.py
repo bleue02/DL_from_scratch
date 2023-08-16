@@ -54,9 +54,29 @@ def cross_entropy_error(y, t):
 
     # 원-핫 인코딩 경우 정수 인덱스를 가져옴
     if t.size == y.size:
-        t = t.argmax(axis=1)
+        t = t.argmax(axis=1) # np.clip 함수는 넘파이 배열의 원소를 지정된 범위 내로 제한(클립)하는 함수
+    y_clipped = np.clip(y, 1e-10, 1 - 1e-10) # Y의 원소중 1e-10보다 작은 경우 1e-10, = "0.0000000001"
+                                             # Y의 원소중 1e-10보다 큰 경우 1 - 1e-10 = "0.9999999999"
+    return -np.sum(np.log(y_clipped[np.arange(batch_size), t])) / batch_size
 
-    return -np.sum(np.log(y[np.arange(batch_size), t] + 1e-7)) / batch_size
+    # return -np.sum(np.log(y[np.arange(batch_size), t] + 1e-7)) / batch_size  # 원래 코드
 
 
+
+class Relu:
+    def __init__(self):
+        self.mask = None
+
+    def forward(self, x):
+        self.mask = (x <= 0)
+        out = x.copy()
+        out[self.mask] = 0
+
+        return out
+
+    def backward(self, dout):
+        dout[self.mask] = 0
+        dx = dout
+
+        return dx
 
