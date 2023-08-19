@@ -15,7 +15,7 @@ network = TwoLayerNet(input_size=784, hidden_size=50, output_size=10)
 # 하이퍼 파라메터
 iters_num = 10000  # 반복횟수
 train_size = x_train.shape[0]
-batch_size = 100  # 미니배치 크기
+batch_size = 100  # 미니배치 크기 fff
 learning_rate = 0.1
 
 train_loss_list = []

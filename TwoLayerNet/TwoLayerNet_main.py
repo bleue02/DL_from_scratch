@@ -3,7 +3,6 @@ import numpy as np
 from Common_func.common_main import softmax, sigmoid, cross_entropy_error
 from Gradients.gradients import multidimensional_numerical_gradients
 # from Gradients.gradients import gradient_descent
-
 sys.path.append(os.pardir)
 
 class TwoLayerNet:
